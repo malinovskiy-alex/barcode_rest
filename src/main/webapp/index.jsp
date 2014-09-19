@@ -10,6 +10,6 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<c:redirect context="/barcodes.html"/>
+		<c:redirect url="/barcodes.html"/>
 	</body>
 </html>
