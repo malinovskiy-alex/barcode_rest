@@ -16,6 +16,6 @@ public class HomeController {
     @RequestMapping(method = RequestMethod.GET)
     public String getStartPage() {
         LOG.info("Request to home page.");
-        return "redirect:barcodes";
+        return "redirect:barcodes.html";
     }
 }
