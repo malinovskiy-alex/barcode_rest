@@ -12,9 +12,9 @@ public class BarcodeBean {
         super();
     }
 
-    public BarcodeBean(String type, String locationCode, String barcode) {
-        this.type = type;
+    public BarcodeBean(String locationCode, String type, String barcode) {
         this.locationCode = locationCode;
+        this.type = type;
         this.barcode = barcode;
     }
 
@@ -43,7 +43,7 @@ public class BarcodeBean {
     }
 
     public String toString() {
-        return "BarcodeBean [type: " + type + " , location:" + locationCode + ", barcode:" + barcode + "]";
+        return "{\"locationCode\" : \""+locationCode + "\", \"type\" : \"" + type + "\", \"barcode\":\"" + barcode + "\"}";
     }
 
     @Override
