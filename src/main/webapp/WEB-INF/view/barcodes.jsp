@@ -13,7 +13,7 @@
 </head>
 <body>
 <div align="center">
-    <table border="1" style="width:50%">
+    <table border="1" id="barcodes" style="width:50%">
         <tr style="text-align: center; font-weight:bold">
             <td>UN location code</td>
             <td>Entry type</td>
