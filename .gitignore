@@ -1,4 +1,7 @@
 *.iml
 .idea
 .settings
+.gradle
 target/
+build/
+gradle/
