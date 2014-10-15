@@ -2,19 +2,37 @@ apply plugin: 'maven'
 apply plugin: 'war'
 apply plugin: 'jetty'
 
-
 group = 'com.malinovskiy.barcodereader'
 version = '1.0.0-SNAPSHOT'
-
 description = """"""
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-
-
 repositories {
     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+configurations {
+    functTestCompile.extendsFrom testCompile
+    functTestRuntime.extendsFrom testRuntime
+}
+
+sourceSets {
+    functionalTest {
+        java.srcDir file('src/funcTest/java')
+        compileClasspath = sourceSets.main.output +
+                configurations.functTestCompile
+        runtimeClasspath = output + compileClasspath +
+                configurations.functTestRuntime
+
+    }
+}
+
+task functionalTest(type: Test) {
+    testClassesDir = sourceSets.functionalTest.output.classesDir
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    systemProperty 'webdriver.chrome.driver', './BrowserDrivers/chromedriver.exe'
 }
 
 jettyRunWar {
@@ -25,30 +43,27 @@ jettyRunWar {
     daemon = true
 }
 
-test {
-    systemProperty "webdriver.chrome.driver", "./BrowserDrivers/chromedriver.exe"
-}
-
 jettyStop {
     stopPort = 8090
     stopKey = 'stopKey'
 }
 
-test.dependsOn jettyRunWar
-jettyStop.dependsOn test
+functionalTest.dependsOn jettyRunWar
+jettyStop.dependsOn functionalTest
+check.dependsOn functionalTest
 
 dependencies {
     compile group: 'org.springframework', name: 'spring-webmvc', version: '3.2.3.RELEASE'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.0'
     compile group: 'log4j', name: 'log4j', version: '1.2.12'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile(group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '2.43.1') {
-        exclude(module: 'javax.servlet')
-    }
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '2.43.1'
     providedCompile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
     providedCompile group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    functTestCompile(group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '2.43.1') {
+        exclude(module: 'javax.servlet')
+    }
+    functTestRuntime group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '2.43.1'
     runtime group: 'javax.servlet', name: 'jstl', version: '1.2'
 }
 
